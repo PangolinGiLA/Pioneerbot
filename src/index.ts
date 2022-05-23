@@ -1,10 +1,12 @@
 'use strict'
+import "reflect-metadata";
 import { Interaction, Message } from 'discord.js';
 import { createInterface } from 'readline';
 import { writeFile } from 'fs';
 import { Wrapper } from './structures';
 import { importCommands } from './commandHandler';
 import config from '../config.json';
+import { AppDataSource } from './database/data-source';
 
 const wrapper = new Wrapper(config.prefix);
 
@@ -25,6 +27,15 @@ else {
 	wrapper.client.login(config.token);
 	importCommands();
 }
+
+AppDataSource.initialize()
+    .then(() => {
+        console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err)
+    })
+
 
 wrapper.client.on('ready', async () => {
 	if (wrapper.client.user != null) {

@@ -25,6 +25,7 @@ export const createConnection = async (ID: string, queues: Wrapper, message: Mes
 	const connection = joinVoiceChannel({
 		channelId: voice.channelId,
 		guildId: ID,
+		//@ts-ignore
 		adapterCreator: voice.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator,
 		selfDeaf: false
 	});

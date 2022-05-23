@@ -5,6 +5,7 @@ import { TextChannel, GuildMember, DMChannel, NewsChannel, ThreadChannel, Partia
 import { AudioPlayer, VoiceConnection, AudioPlayerStatus, createAudioResource, AudioPlayerState } from "@discordjs/voice";
 import { messageProvider } from "./messageProvider";
 import { commandHandler } from './commandHandler';
+import { MusicLogger } from './database/database';
 
 type MessageChannel = TextChannel | DMChannel | NewsChannel | ThreadChannel | PartialDMChannel;
 
@@ -23,6 +24,7 @@ const FLAGS = {
  * @param {string} title - Youtube video title
  * @param {string} author - Youtube channel name
  * @param {string} duration - length of song in seconds
+ * @param {boolean} random - whether the song was choosen randomly
  */
 export class Song {
 	public url: string;
@@ -30,13 +32,15 @@ export class Song {
 	public title: string;
 	public author: string;
 	public duration: string;
+	public random: boolean;
 
-	public constructor (url: string, user: string | undefined, title: string, author: string, duration: string) {
+	public constructor (url: string, user: string | undefined, title: string, author: string, duration: string, random = false) {
 		this.url = url;
 		this.user = user;
 		this.title = title;
 		this.author = author;
 		this.duration = duration;
+		this.random = random;
 	}
 
 	/**
@@ -148,6 +152,7 @@ export class Queue {
 		if (!stream.stdout) return;
 	
 		const resource = createAudioResource(stream.stdout);
+		MusicLogger.log(getVideoID(song.url), song.getUser(), this.guildId, song.random);
 		this.player.play(resource);
 	}
 

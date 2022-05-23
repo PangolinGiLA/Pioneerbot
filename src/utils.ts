@@ -6,41 +6,10 @@ import { isText } from 'domhandler';
 import { Message } from "discord.js";
 import { createConnection } from "./commands/join";
 import { messageProvider } from "./messageProvider";
+import ytdl from "ytdl-core";
 
 export const getVideoID = (url: string) => {
-	const validURLregex = /^https?:\/\/(youtu\.be\/|(www\.)?youtube\.com\/(embed|v|shorts)\/)/;
-	const validIDRegex = /^[a-zA-Z0-9-_]{11}$/;
-
-	const parsed = new URL(url);
-
-	if (!validURLregex.test(url)) {
-		throw Error('Invalid YouTube URL');
-	}
-
-	// url like: 
-	// https://www.youtube.com/watch?v=[VideoId]
-	// https://m.youtube.com/watch?v=[VideoId]
-	// https://music.youtube.com/watch?v=[VideoId]
-	// https://gaming.youtube.com/watch?v=[VideoId]
-	let id = parsed.searchParams.get('v');
-
-	if (!id) {
-		const path = parsed.pathname.split('/');
-		// url like: 
-		// https://youtu.be/[VideoId]
-		if (parsed.hostname === 'youtu.be') id = path[1];
-		// url like: 
-		// https://www.youtube.com/v/[VideoId]
-		// https://www.youtube.com/embed/[VideoId]
-		// https://www.youtube.com/shorts/[VideoId]
-		else id = path[2];
-	}
-
-	if (!validIDRegex.test(id)) {
-		throw Error('Invalid YouTube URL');
-	}
-
-	return id;
+	return ytdl.getVideoID(url);
 }
 
 export const validateURL = (toValidate: string) => {
