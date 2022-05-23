@@ -17,8 +17,13 @@ export class MusicLogger {
         .getRepository(MusicLog)
         .createQueryBuilder("entry")
         .where("entry.guildId = :guildId", { guildId })
+        .andWhere("entry.removed = false")
         .groupBy("entry.ytid")
         .orderBy("RANDOM()", "DESC")
         .getOne()
+    }
+
+    public static async removeSong(ytid: string) {
+        await AppDataSource.manager.update(MusicLog, {ytid: ytid}, { removed: true });
     }
 }

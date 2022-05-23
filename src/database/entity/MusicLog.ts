@@ -20,5 +20,8 @@ export class MusicLog {
 
     @Column()
     playedAt: Date
+
+    @Column({default: false})
+    removed: boolean
     
 }
