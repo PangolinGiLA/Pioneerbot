@@ -26,4 +26,8 @@ export class MusicLogger {
     public static async removeSong(ytid: string) {
         await AppDataSource.manager.update(MusicLog, {ytid: ytid}, { removed: true });
     }
+
+    public static async removeSongFromGuild(ytid: string, guildId: string) {
+        await AppDataSource.manager.update(MusicLog, {ytid: ytid, guildId: guildId}, { removed: true });
+    }
 }
