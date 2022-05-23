@@ -2,13 +2,13 @@ import { AppDataSource } from "./data-source"
 import { MusicLog } from "./entity/MusicLog"
 
 export class MusicLogger {
-    public static async log(ytid: string, user: string, guildId: string, random: boolean) {
+    public static async log(ytid: string, user: string, guildId: string, random: boolean, playedAt?: Date) {
         const log = new MusicLog()
         log.ytid = ytid
         log.requestedBy = user
         log.random = random
         log.guildId = guildId
-        log.playedAt = new Date()
+        log.playedAt = playedAt ? playedAt : new Date()
         await AppDataSource.manager.save(log)
     }
 

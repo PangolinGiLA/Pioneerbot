@@ -18,10 +18,12 @@ export const playRandom = async (ID: string, queues: Wrapper, message: Message, 
 	let randomEntry = await MusicLogger.getRandomSong(ID);
     let url = `https://www.youtube.com/watch?v=${randomEntry.ytid}`;
     let randomSong = await Song.build(url, message.member);
+    if (randomSong)
+        randomSong.random = true;
     playSong(ID, queues, message, randomSong);
 }
 
-export const playSong = async (ID: string, queues: Wrapper, message: Message, song: Song) => { 	
+const playSong = async (ID: string, queues: Wrapper, message: Message, song: Song) => { 	
 	const QUEUE = await checkQueue(ID, queues, message, true);
 	if (QUEUE == null) return null;
 
